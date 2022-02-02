@@ -1,0 +1,44 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Avistos
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#" style="color:orange;">Avistos Innovative Solutions</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#" style="color:rgb(255, 145, 0);">Home</a></li>
+            <li><a href="{{ url_for('login') }}" style="color:rgb(255, 136, 0);">Login</a></li>
+            <li><a href="{{ url_for('signup') }}" style="color:rgb(255, 136, 0);">Sign Up</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="starter-template" >
+
+        <h1 style="color:rgba(255, 157, 0, 0.726);">Avistos Innovative Solutions</h1>
+
+        <p class="lead" style="color:rgb(255, 145, 0);">Avistos  Annotation Tool.<br> v1 ==>  Image Annotation Tool</p>
+      </div>
+
+    </div><!-- /.container -->
+{% endblock %}
