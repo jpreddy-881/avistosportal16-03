@@ -16,16 +16,24 @@ from flask_login import (
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
+from urllib.parse import quote
+from flask_migrate import Migrate
+import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Thisissupposedtobesecret!"
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = "sqlite:///C:\\Users\\damodar.pulimamidi\\OneDrive - aalgorithm.com\\Desktop\\my_poc\\database.db"
+
+# ] = "sqlite:///C:\\Users\\damodar.pulimamidi\\Desktop\\16march\\singleapp\\database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://jpr@avistosdb01:%s@avistosdb01.mysql.database.azure.com/avistos" % quote('Prakash.881')
+
+
 
 bootstrap = Bootstrap(app)
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
 # class User( db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     username = db.Column(db.String(15), unique=True)
@@ -91,17 +99,19 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
-            # if user.password == form.password.data:
-            #     return redirect(url_for('dashboard'))
-
-            if check_password_hash(user.password, form.password.data):
+            if user.password == form.password.data:
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for("dashboard"))
+                return redirect(url_for('dashboard'))
+
+            # if check_password_hash(user.password, form.password.data):
+            #     login_user(user, remember=form.remember.data)
+            #     return redirect(url_for("dashboard"))
 
         return "<h1>Invalid username or password</h1>"
         # return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 
     return render_template("login.html", form=form)
+    # return render_template("dashboard.html", form=form)
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -109,13 +119,14 @@ def signup():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method="sha256")
+        # hashed_password = generate_password_hash(form.password.data, method="sha256")
+        password1 = (form.password.data)
         new_user = User(
             username=form.username.data,
             email=form.email.data,
             role=form.role.data,
             client=form.client.data,
-            password=hashed_password,
+            password=password1,
         )
         db.session.add(new_user)
         db.session.commit()
@@ -145,4 +156,5 @@ admin.add_view(ModelView(User, db.session))
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(debug="True", host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
